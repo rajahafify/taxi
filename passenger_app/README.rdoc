@@ -1,28 +1,9 @@
-== README
+For the first app, you would need to create 2 set of APIs.
+The first set would allow me to:
+1) create a passenger record with my phone number
+2) retrieve my system generated password based on my phone number.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+The second set you would need to be able to:
+1) create a booking as a passenger (the passenger needs to be authenticated with the correct system generated password)
+2) retrieve the booking id of the newly created booking.
+3) retrieve the details of the booking with the driver's name and phone number.
