@@ -11,6 +11,14 @@ describe Api::V1::UsersController do
       }.to change(User, :count).by 1
     end
 
+    it "will return status fail if no phone_number" do
+      post :create, user: { phone_number: nil}
+      response.should be_success
+      json.should have_key 'status'
+      json['status'].should eql 'fail'
+      json.should_not have_key 'auth_token'
+    end
+
     it "respond with user auth_token" do
       post :create, user: { phone_number: '0123456789'}
       response.should be_success
@@ -19,14 +27,14 @@ describe Api::V1::UsersController do
       json.should have_key 'auth_token'
     end
 
-    it "will not create duplicate user" do
+    it "will return user if user exist" do
       user = create :user
       user.save
       post :create, user: { phone_number: user.phone_number}
       response.should be_success
       json.should have_key 'status'
-      json['status'].should eql 'fail'
-      json.should_not have_key 'auth_token'
+      json['status'].should eql 'success'
+      json.should have_key 'auth_token'
     end
   end
 end
