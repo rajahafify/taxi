@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  validates :phone_number, presence: true
+  validates :phone_number, presence: true, uniqueness: true
   validates :auth_token, presence: true
   before_validation :generate_auth_token
 
