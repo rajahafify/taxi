@@ -1,9 +1,25 @@
 For the first app, you would need to create 2 set of APIs.
 The first set would allow me to:
-1) create a passenger record with my phone number
+1) create a user record with my phone number
+  * user model
+  * api/v1/users_controller#create
+    * user.create(:phone_number)
 2) retrieve my system generated password based on my phone number.
+  * @auth_token = user.find_by(phone_number: :phone_number)).token
 
 The second set you would need to be able to:
-1) create a booking as a passenger (the passenger needs to be authenticated with the correct system generated password)
+1) create a booking as a user (the user needs to be authenticated with the correct system generated password)
+  * booking model
+  * api/v1/bookings_controller#create
+    * before_action :find_user_from_token
+      * user = User.authenticate!(:phone_number, :auth_token)
 2) retrieve the booking id of the newly created booking.
+  * api/v1/bookings_controller#show
+    * user = find_user_from_token
+    * @booking = user.bookings_last
 3) retrieve the details of the booking with the driver's name and phone number.
+  * routes member: get: 'details/:booking_id'
+  * api/v1/bookings_controller#details
+    * booking = Booking.find_by(booking_id: :booking_id)
+    * @details = booking.driver.details
+
