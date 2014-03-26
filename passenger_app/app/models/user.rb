@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   validates :auth_token, presence: true
   before_validation :generate_auth_token
 
+  has_many :bookings
+
   private
 
     def generate_auth_token

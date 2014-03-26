@@ -7,6 +7,8 @@ describe User do
 
   it { should respond_to :phone_number }
   it { should respond_to :auth_token }
+  it { should respond_to :bookings }
+  it { should be_valid }
 
   describe "before_validation" do
     describe "#generate_auth_token" do
