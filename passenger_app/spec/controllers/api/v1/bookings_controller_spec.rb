@@ -52,4 +52,15 @@ describe Api::V1::BookingsController do
       end
     end
   end
+
+  describe "details" do
+    let(:booking) { create :booking_with_driver }
+
+    it "should return driver details" do
+      get :details, id: booking
+      response.should be_success
+      json.should have_key 'driver_name'
+      json.should have_key 'driver_phone_number'
+    end
+  end
 end

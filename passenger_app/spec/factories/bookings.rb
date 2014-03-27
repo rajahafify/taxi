@@ -5,5 +5,12 @@ FactoryGirl.define do
     latitude "41.40338"
     longitude "2.17403"
     user
+    driver_assigned { false }
+    driver_id { nil }
+
+    factory :booking_with_driver do
+      driver_assigned { true }
+      driver_id { 1 }
+    end
   end
 end

@@ -3,6 +3,10 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'factory_girl_rails'
+require 'webmock/rspec'
+require 'open-uri'
+
+WebMock.disable_net_connect!(allow_localhost: false)
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
@@ -17,6 +21,19 @@ RSpec.configure do |config|
   config.include Requests::JsonHelpers, :type => :controller
   config.infer_base_class_for_anonymous_controllers = false
   config.order = "random"
+
+  config.before(:each) do
+    stub_request(:get, /www.example.com/).
+      with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+      to_return(status: 200, body: "stubbed response", headers: {})
+    stub_request(:get, "http://localhost:3001/driver/1").
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
+      to_return(:status => 200, :body => "{driver_name: 'ALI', driver_phone_number: '0123456777'}", :headers => {})
+    stub_request(:post, "http://localhost:3001/assign").
+      with(:body => {"booking_id"=>"1"},
+          :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Ruby'}).
+      to_return(:status => 200, :body => "{driver_id: 1}", :headers => {})
+  end
 end
 
 prefork = lambda {
