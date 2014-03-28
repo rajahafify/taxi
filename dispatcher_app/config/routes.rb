@@ -6,6 +6,7 @@ DispatcherApp::Application.routes.draw do
           get :details
         end
       end
+      resources :assignments
     end
   end
 end
