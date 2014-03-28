@@ -9,6 +9,7 @@ describe Driver do
   it { should respond_to :phone_number }
   it { should respond_to :latitude }
   it { should respond_to :longitude }
+  it { should respond_to :assignments }
   it { should be_valid }
 
   describe "validations" do

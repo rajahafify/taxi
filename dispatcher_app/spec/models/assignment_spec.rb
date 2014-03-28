@@ -7,6 +7,7 @@ describe Assignment do
 
   it { should respond_to :booking_id }
   it { should respond_to :driver_id }
+  it { should respond_to :driver }
   it { should be_valid }
 
   describe "validation" do
@@ -21,6 +22,16 @@ describe Assignment do
       it "should not be valid" do
         @assignment = assignment.dup
         @assignment.should_not be_valid
+      end
+    end
+  end
+
+  describe "callbacks" do
+    describe "before_create" do
+      its(:driver_id) { should be_nil }
+      it "should assign driver" do
+        assignment.save
+        assignment.driver_id.should_not be_nil
       end
     end
   end
