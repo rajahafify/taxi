@@ -22,11 +22,17 @@ class Driver < ActiveRecord::Base
     calculate_distance(latitude,longitude)
   end
 
-
+  def send_sms
+    deliver_sms("You have a booking for with id #{self.assignments.last.booking_id}")
+  end
 
   protected
 
     def calculate_distance(latitude, longitude)
       Geocoder::Calculations.distance_between(self, [latitude,longitude])
+    end
+
+    def deliver_sms(message)
+      p message
     end
 end

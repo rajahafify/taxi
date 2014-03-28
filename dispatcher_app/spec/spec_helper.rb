@@ -14,6 +14,7 @@ ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 include ActionDispatch::TestProcess
 
 RSpec.configure do |config|
+  Delayed::Worker.delay_jobs = false
   config.include FactoryGirl::Syntax::Methods
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

@@ -48,4 +48,12 @@ describe Driver do
       (11..100).each { |n| Driver.nearest_driver(1,n).should eql driver_3 }
     end
   end
+
+
+  describe "send_sms" do
+    let!(:assignment) { create :assignment, driver: driver }
+    it "should send_sms" do
+      driver.send_sms
+    end
+  end
 end
