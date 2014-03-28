@@ -1,11 +1,11 @@
-== For the second app, I would like you to mimic our nodejs/dispatcher system. 
+== For the second app, I would like you to mimic our nodejs/dispatcher system.
 1) The first thing that you need to do is to create a rake task that would populate the database with 10 drivers with randomly generated latitude and longitude.
   * driver model, name, phone_number, latitude, longitude
   * lib/tasks/sample_driver.rake
     * rake db:populate
   * get :details, driver_id: driver.id
 2) After that, you will create a set of API that assigns the nearest driver to a booking.
-  * assignment model
+  * assignment model, booking_id, latitude, longitude, driver_id
   * post :create, booking_id: booking.id
 
 3) Once a driver is assigned, you will call a background worker (like Sidekiq) to send out an SMS to the driver (you can just print out the message for the purposes of this test).
