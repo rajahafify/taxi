@@ -11,10 +11,14 @@ class Assignment < ActiveRecord::Base
   private
 
     def assign_driver
-      sleep 5
-      booking = JSON.parse open("#{self.passenger_app_url}api/v1/bookings/#{self.booking_id}").read
-      booking_details = {}
-      latitude,longitude = 1,11
-      self.driver = Driver.nearest_driver(latitude,longitude)
+      begin
+        uri = passenger_app_url
+        uri.path = "/api/v1/bookings/#{self.booking_id}"
+        http = Net::HTTP.new(uri.host, uri.port)
+        request = Net::HTTP::Get.new(uri.request_uri)
+        booking ||= JSON.parse http.request(request).body
+        latitude,longitude = booking['latitude'].to_i, booking['longitude'].to_i
+        self.driver = Driver.nearest_driver(latitude,longitude)
+      end
     end
 end

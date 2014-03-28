@@ -3,7 +3,7 @@ class Api::V1::AssignmentsController < ApplicationController
   def create
     assignment = Assignment.new(assignment_params)
     if assignment.save
-      render json: { status: 'success', assignment_id: assignment.id }
+      render json: { status: 'success', driver_id: assignment.driver.id }
     else
       render json: { status: 'fail', errors: assignment.errors.messages }
     end

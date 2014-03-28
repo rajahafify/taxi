@@ -6,7 +6,7 @@ require 'factory_girl_rails'
 require 'webmock/rspec'
 require 'open-uri'
 
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!(allow_localhost: false)
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
@@ -21,6 +21,16 @@ RSpec.configure do |config|
   config.include Requests::JsonHelpers, :type => :controller
   config.infer_base_class_for_anonymous_controllers = false
   config.order = "random"
+
+  config.before(:each) do
+    stub_request(:get, /www.example.com/).
+      with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+      to_return(status: 200, body: "stubbed response", headers: {})
+    stub_request(:get, "http://localhost:3000/api/v1/bookings/1").
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
+      to_return(:status => 200, :body => '{"latitude":"1","longitude":"11"}', :headers => {})
+
+  end
 end
 
 prefork = lambda {

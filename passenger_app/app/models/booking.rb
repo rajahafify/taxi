@@ -37,6 +37,7 @@ class Booking < ActiveRecord::Base
         con.start do |http|
           request = http.request(req)
           if request.body and JSON.parse(request.body)[:driver_id]
+            p request
            self.driver_id = eval(request.body)[:driver_id]
            self.driver_assigned = true
            self.save

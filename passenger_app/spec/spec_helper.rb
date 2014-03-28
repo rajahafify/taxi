@@ -14,6 +14,7 @@ ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 include ActionDispatch::TestProcess
 
 RSpec.configure do |config|
+  Delayed::Worker.delay_jobs = false
   config.include FactoryGirl::Syntax::Methods
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -26,10 +27,21 @@ RSpec.configure do |config|
     stub_request(:get, /www.example.com/).
       with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
       to_return(status: 200, body: "stubbed response", headers: {})
-    stub_request(:post, "http://localhost:3001/api/v1/assignments").
+    stub_request(:get, "http://localhost:3001/driver/1").
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
+      to_return(:status => 200, :body => "{driver_name: 'ALI', driver_phone_number: '0123456777'}", :headers => {})
+    stub_request(:post, "http://localhost:3001/assign").
       with(:body => {"booking_id"=>"1"},
           :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Ruby'}).
-      to_return(:status => 200, :body => "", :headers => {})
+      to_return(:status => 200, :body => "{driver_id: 1}", :headers => {})
+    stub_request(:get, "http://localhost:3001/api/v1/drivers/1/details").
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
+      to_return(:status => 200, :body => '{"driver_name":"Llewellyn Skiles","driver_phone_number":"1-130-025-5473 x19570"}', :headers => {})
+    # stub_request(:post, "http://localhost:3001/api/v1/assignments").
+    #   with(:body => {"booking_id"=>"1"},
+    #        :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Ruby'}).
+    #   to_return(:status => 200, :body => "", :headers => {})
+
   end
 end
 
