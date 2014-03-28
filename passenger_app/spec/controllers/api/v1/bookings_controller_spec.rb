@@ -53,7 +53,23 @@ describe Api::V1::BookingsController do
     end
   end
 
-  describe "details" do
+  describe "#show" do
+    let!(:booking) { create :booking }
+    it "should be success" do
+      get :show, id: booking.id
+      response.should be_success
+    end
+
+    it "should return location json" do
+      get :show, id: booking.id
+      json.should have_key 'latitude'
+      json['latitude'].should eql booking.latitude
+      json.should have_key 'longitude'
+      json['longitude'].should eql booking.longitude
+    end
+  end
+
+  describe "#details" do
     let(:booking) { create :booking_with_driver }
 
     it "should return driver details" do

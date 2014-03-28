@@ -1,5 +1,5 @@
 class Api::V1::BookingsController < ApplicationController
-  before_action :authorize_user, except: :details
+  before_action :authorize_user, only: :create
   skip_before_action :verify_authenticity_token, :only => [:create, :details]
   def create
     booking = @user.bookings.build(booking_params)
@@ -8,6 +8,11 @@ class Api::V1::BookingsController < ApplicationController
     else
       render json: { status: 'fail' }
     end
+  end
+
+  def show
+    booking = Booking.find(params[:id])
+    render json: {latitude: booking.latitude, longitude: booking.longitude}
   end
 
   def details

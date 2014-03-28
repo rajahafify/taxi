@@ -8,12 +8,15 @@ class Booking < ActiveRecord::Base
 
   belongs_to :user
 
-  after_create :assign_driver
+  after_create :create_job_assign_driver
 
   def details
-    if self.driver_assigned?
-      url = self.dispatcher_url + 'driver'
-      @details ||= eval open("#{url}/#{self.driver_id}").read # unsafe;
+    uri = dispatcher_url
+    uri.path = "/api/v1/drivers/#{driver_id}/details"
+    if driver_assigned?
+      http = Net::HTTP.new(uri.host, uri.port)
+      request = Net::HTTP::Get.new(uri.request_uri)
+      @details ||= JSON.parse http.request(request).body
     else
       @details = {}
     end
@@ -23,20 +26,29 @@ class Booking < ActiveRecord::Base
     URI.parse DISPATCHER_APP_URL
   end
 
-  private
-
-    def assign_driver
-      url = self.dispatcher_url + 'assign'
-      req = Net::HTTP::Post.new(url.path)
-      req.form_data = { booking_id: self.id }
-      con = Net::HTTP.new(url.host, url.port)
-      con.start do |http|
-        request = http.request(req)
-        if request.body and eval(request.body)[:driver_id]
-         self.driver_id = eval(request.body)[:driver_id]
-         self.driver_assigned = true
-         self.save
+  def assign_driver
+    unless driver_assigned?
+      begin
+        uri = self.dispatcher_url
+        uri.path = '/api/v1/assignments'
+        req = Net::HTTP::Post.new(uri.path)
+        req.form_data = { booking_id: self.id }
+        con = Net::HTTP.new(uri.host, uri.port)
+        con.start do |http|
+          request = http.request(req)
+          if request.body and JSON.parse(request.body)[:driver_id]
+           self.driver_id = eval(request.body)[:driver_id]
+           self.driver_assigned = true
+           self.save
+          end
         end
       end
+    end
+  end
+
+  private
+
+    def create_job_assign_driver
+      self.delay.assign_driver
     end
 end

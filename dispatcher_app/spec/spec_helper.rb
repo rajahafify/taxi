@@ -6,7 +6,7 @@ require 'factory_girl_rails'
 require 'webmock/rspec'
 require 'open-uri'
 
-WebMock.disable_net_connect!(allow_localhost: false)
+WebMock.disable_net_connect!(allow_localhost: true)
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 

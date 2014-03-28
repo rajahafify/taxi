@@ -28,11 +28,26 @@ describe Assignment do
 
   describe "callbacks" do
     describe "before_create" do
+      let!(:driver_1) { create :driver, latitude: 1, longitude: 1 }
+      let!(:driver_2) { create :driver, latitude: 1, longitude: 5 }
+      let!(:driver_3) { create :driver, latitude: 1, longitude: 10 }
       its(:driver_id) { should be_nil }
       it "should assign driver" do
         assignment.save
-        assignment.driver_id.should_not be_nil
+        assignment.reload.driver_id.should_not be_nil
       end
+
+      it "should assign nearest driver" do
+        assignment.save
+        assignment.driver.should eql driver_3 # mock return lat,long = [1,11]
+      end
+    end
+  end
+
+
+  describe "passenger_app_url" do
+    it "should have passenger_app_url" do
+      assignment.passenger_app_url.path.should eql '/'
     end
   end
 end

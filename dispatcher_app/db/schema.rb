@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140328010806) do
+ActiveRecord::Schema.define(version: 20140328012859) do
 
   create_table "assignments", force: true do |t|
     t.integer  "booking_id"
@@ -23,8 +23,8 @@ ActiveRecord::Schema.define(version: 20140328010806) do
   create_table "drivers", force: true do |t|
     t.string   "name"
     t.string   "phone_number"
-    t.string   "latitude"
-    t.string   "longitude"
+    t.float    "latitude",     limit: 255
+    t.float    "longitude",    limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end

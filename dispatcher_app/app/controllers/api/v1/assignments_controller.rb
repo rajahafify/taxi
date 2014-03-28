@@ -1,4 +1,5 @@
 class Api::V1::AssignmentsController < ApplicationController
+  skip_before_action :verify_authenticity_token, :only => [:create]
   def create
     assignment = Assignment.new(assignment_params)
     if assignment.save
@@ -11,6 +12,6 @@ class Api::V1::AssignmentsController < ApplicationController
   private
 
     def assignment_params
-      params.require(:assignment).permit(:booking_id, :latitude, :longitude)
+      params.permit(:booking_id, :latitude, :longitude)
     end
 end

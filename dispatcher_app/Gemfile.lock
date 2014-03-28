@@ -49,6 +49,7 @@ GEM
       railties (>= 3.0.0)
     faker (1.1.2)
       i18n (~> 0.5)
+    geocoder (1.1.9)
     hike (1.2.3)
     i18n (0.6.9)
     mail (2.5.4)
@@ -125,6 +126,7 @@ DEPENDENCIES
   coffee-rails (= 4.0.1)
   factory_girl_rails (= 4.2.0)
   faker (= 1.1.2)
+  geocoder
   rails (= 4.0.4)
   rspec-rails (= 2.13.1)
   sass-rails (= 4.0.1)
