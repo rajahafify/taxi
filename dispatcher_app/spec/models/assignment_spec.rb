@@ -18,7 +18,8 @@ describe Assignment do
     end
 
     describe "uniqueness" do
-      let(:assignment) { create :assignment }
+      let!(:driver) { create :driver }
+      let(:assignment) { create :assignment, driver: driver }
       it "should not be valid" do
         @assignment = assignment.dup
         @assignment.should_not be_valid
